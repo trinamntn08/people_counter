@@ -1,5 +1,5 @@
-from model_detector.modelDetector import *
-from modelTracker import *
+from stream_counter_people.main.counting_people_algorithm.modelTracker import *
+from stream_counter_people.main.counting_people_algorithm.model_detector.modelDetector import *
 import os
 import imutils
 from imutils.video import FileVideoStream
@@ -35,6 +35,7 @@ total = [0]
 totalFrames = [0] # use "list" for passing by reference in modelTracker.run() function
 
 # Writing output video
+save_video=False
 writer=None
 #################END#######################
 
@@ -61,17 +62,18 @@ while fvs.more():
             print("Height Frame:", H_frame,"Width Frame:",W_frame)
 
         # Initialize output writer
-        if writer is None:
-            fourcc = cv2.VideoWriter_fourcc(*'XVID')
-            writer = cv2.VideoWriter('video.avi', fourcc, 24,
-                                    (W_frame, H_frame), True)
+        if save_video == True:
+            if writer is None:
+                fourcc = cv2.VideoWriter_fourcc(*'XVID')
+                writer = cv2.VideoWriter('video.avi', fourcc, 24,
+                                        (W_frame, H_frame), True)
 
         #Run model in each frame
         modelTracker.run_model(frame,totalFrames,total_In,total_Out,nbr_frames_tracking)
         #print('Total In: ',total_In,'Total Out: ',total_Out)
-
-        if writer is not None:
-            writer.write(frame)
+        if save_video == True:
+            if writer is not None:
+                writer.write(frame)
 
         # show the frame and update the FPS counter
         cv2.imshow("Frame", frame)
@@ -88,8 +90,9 @@ print("[INFO] Total time: {:.2f}".format(fps.elapsed()))
 print("[INFO] approx. FPS: {:.2f}".format(fps.fps()))
 
 # check to see if we need to release the video writer pointer
-if writer is not None:
-	writer.release()
+if save_video == True:
+    if writer is not None:
+        writer.release()
 
 # Cleanup
 cv2.destroyAllWindows()

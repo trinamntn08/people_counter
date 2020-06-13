@@ -1,6 +1,6 @@
-from personTracker import personTracker
-from listPersonsDetected import *
-from model_detector.modelDetector import model_detector
+from stream_counter_people.main.counting_people_algorithm.personTracker import *
+from stream_counter_people.main.counting_people_algorithm.listPersonsDetected import *
+from stream_counter_people.main.counting_people_algorithm.model_detector.modelDetector import *
 import cv2
 import dlib
 import numpy as np
